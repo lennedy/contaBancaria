@@ -1,8 +1,3 @@
-class ContaBancaria:
-
-    numero_contas=[]
-from collections import Counter
-
 class Cliente:
     def __init__(self, nome: str, cpf: str, endereco: 'Endereco'):
         self.__nome = nome
