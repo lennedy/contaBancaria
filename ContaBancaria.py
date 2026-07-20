@@ -36,13 +36,21 @@ class Cliente:
 
     def get_endereco(self):
         return self.__endereco
-
+    
     def adicionar_conta(self, conta):
         self.__contas.append(conta)
-
+    
     def exibir_dados(self):
         return f"Nome: {self.__nome}\nCPF: {self.__cpf}\n{self.__endereco.exibir_dados()}"
 
+    def quantidade_contas(self):
+        print(self.__contas)
+        return len(self.__contas)
+        
+    
+    def consultar_saldo_total(self):
+        return sum(conta.get_saldo() for conta in self.__contas)
+        
     def __str__(self):
         return self.__nome
 
@@ -119,6 +127,13 @@ class ContaCorrente(ContaBancaria):
 
     def get_tipo_conta(self):
         return "Conta Corrente"
+    
+    def pix(self, valor, conta_destino):
+        if valor > 0 and self.get_saldo() >= valor:
+            if conta_destino.depositar(valor):
+                self._ContaBancaria__saldo -= valor
+                return True
+        return False
 
 
 class ContaPoupanca(ContaBancaria):
@@ -140,9 +155,7 @@ class ContaPoupanca(ContaBancaria):
 
 class ContaSalario(ContaBancaria):
 
-    def __init__(self, cliente, numero, saldo_inicial=0,
-                 empresa="", limite_saques=3):
-
+    def __init__(self, cliente, numero, saldo_inicial=0, empresa="", limite_saques=3):
         super().__init__(cliente, numero, saldo_inicial)
 
         self.__empresa = empresa
@@ -172,3 +185,19 @@ class ContaSalario(ContaBancaria):
 
     def get_tipo_conta(self):
         return "Conta Salário"
+    
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, cliente, numero, saldo_inicial=0, taxa_rendimento = 0.1, taxa_administracao = 0.2):
+        super().__init__(cliente, numero, saldo_inicial)
+        self.__taxa_rendimento = taxa_rendimento
+        self.__taxa_administracao = taxa_administracao
+
+    def get_tipo_conta(self):
+        return "Conta Investimento"
+    
+    def render_investimento(self):
+        render = self.get_saldo() * self.__taxa_rendimento
+        taxa = self.get_saldo() * self.__taxa_administracao
+        self._ContaBancaria__saldo += render - taxa
+
+

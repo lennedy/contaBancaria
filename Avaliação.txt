@@ -1,0 +1,9 @@
+Avaliação prática Programação Orientada a Objetos
+Aluno: Lucca Nathã Campos de Oliveira
+Data: 20/07/2026
+
+Questão 5:
+a:	O método sacar, pois se não seria permitido saque ilimitado na conta salário
+b: Endereço precisa do Cliente para existir, se não houver a classe Cliente, ela não consegue existir sozinha
+c:	Pois ela traz apenas os métodos base para ser usado de molde para as outras classes mais específicas, isso faz com que o código seja muito mais fácil de organizar e deixa ele mais limpo.
+
