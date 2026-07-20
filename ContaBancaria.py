@@ -47,6 +47,16 @@ class Cliente:
     def adicionar_conta(self,conta):
         self.__contas.append(conta)
     
+    def quantidade_contas(self):
+        return len(self.__contas)
+    
+    def consultar_saldo_total(self):
+        total = 0
+        for conta in self.__contas:
+            total += conta.get_saldo()
+        return total
+    
+    
 
 
 class ContaBancaria:
@@ -104,8 +114,45 @@ class ContaBancaria:
         conta:{self.__numero}
         saldo:{self.__saldo}
         """
-   
+class ContaCorrente(ContaBancaria):
+    def __init__(self, cliente, numero, saldo, cobrar_taxa):
+        super().__init__(cliente, numero, saldo)
+        self.cobrar_taxa = cobrar_taxa
+    def cobrar_taxa(self, taxa):
+        saldo_taxado = self.set_saldo(self.get_saldo - taxa)
+        return saldo_taxado
+    def pix(self, valor, conta_destino):
+        return self.transferir(valor,conta_destino) 
+
+
+        
+    def get_tipo_conta(self):
+        return "Conta Corrente"
+
+
+
+class ContaPoupanca(ContaBancaria):
+    def __init__(self, cliente, numero, saldo,taxa_rendimento = 0.06):
+     super().__init__(cliente, numero, saldo)
+     self.taxa_rendimento = taxa_rendimento
+    def render_juros(self):
+        juros = self.get_saldo * self.taxa_rendimento
+        return juros
     
+    def get_tipo_conta(self):
+     return " Conta Poupanca"
+    
+class ContaInvestimento(ContaBancaria):
+    def __init__(self,cliente,numero, saldo, taxa_rendimento = float, taxa_administracao = float):
+        super().__init__(cliente, numero, saldo)
+        self.taxa_rendimento = taxa_rendimento
+        self.taxa_administracao = taxa_administracao
+    def render_investimento(self):
+        investimento = (self.get_saldo() * self.taxa_rendimento) - self.taxa_administracao
+        return investimento
+        
+    def get_tipo_conta(self):
+        return " conta investimento"
 
     
     @classmethod
