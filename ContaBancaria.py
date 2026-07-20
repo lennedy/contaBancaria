@@ -15,6 +15,12 @@ class Cliente:
 
     def exibir_dados(self):
         return f"Nome: {self.__nome}\nCPF: {self.__cpf}"
+    
+    def quantidade_contas(self):
+        return len(self.__contas)
+   #b 
+    def consultar_saldo_total(self):
+        return sum(conta.get_saldo() for in self.__contas)
 
 
 class ContaBancaria:
@@ -79,6 +85,13 @@ class ContaCorrente(ContaBancaria):
 
     def exibir_dados(self):
         return super().exibir_dados() + f"\nLimite: R$ {self.__limite:.2f}"
+    
+    def pix(conta, valor, conta_destino):
+        if self.get_saldo().= valor:
+             self.sacar(valor)
+            conta_destino.depositar(valor)
+             return True
+             return False
 
 
 class ContaPoupanca(ContaBancaria):
@@ -123,3 +136,11 @@ class ContaSalario(ContaBancaria):
 
     def exibir_dados(self):
         return super().exibir_dados() + f"\nEmpresa: {self.__empresa}"
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, numero, cliente, saldos=0),
+        taxa_rendimento=0.0, taxa administracao=0.0):
+super().__init__(numero,cliente, saldo)
+self.__taxa_rendimento = taxa rendimento
+self.__taxa_administracao = taxa_administracao
+def get_tipo_conta(self):
+return "ContaInvestimento"
