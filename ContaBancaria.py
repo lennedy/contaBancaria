@@ -65,16 +65,20 @@ class Cliente:
             f"Endereço: {self.__endereco.exibir_dados()}"
         )
 
+    def quantidade_contas(self, __contas):
+        return len(self.__contas)
 
 
+    def consultar_saldo_total(self, conta, __contas):
+        return sum(conta.get_saldo() for conta in self.__contas)
 
 class ContaBancaria:
     numeros_contas = []
 
 
-    def __init__(self, cliente: Cliente, numero: str, saldo: float):
+    def __init__(self, cliente: Cliente, numero: int, saldo: float):
         self._cliente = cliente
-        self._numero = str(numero)
+        self._numero = int(numero)
         self._saldo = max(0.0, saldo)
 
 
@@ -142,9 +146,7 @@ class ContaBancaria:
 
 
 
-
 # CONTA CORRENTE
-
 
 
 
@@ -196,9 +198,9 @@ class ContaCorrente(ContaBancaria):
 
 
 
+
 # CONTA POUPANÇA
-
-
+    
 
 
 class ContaPoupanca(ContaBancaria):
@@ -231,9 +233,7 @@ class ContaPoupanca(ContaBancaria):
 
 
 
-
 # CONTA SALÁRIO
-
 
 
 
@@ -299,270 +299,41 @@ class ContaSalario(ContaBancaria):
     def get_tipo_conta(self):
         return "Conta Salário"
 
-
-AppBanco: 
-
-import tkinter as tk
-from tkinter import messagebox, simpledialog
-from ContaBancaria import Endereco, ContaBancaria, Cliente, ContaCorrente, ContaPoupanca, ContaSalario
+    #CONTA INVESTIMENTO
 
 
 
+# CONTA INVESTIMENTO
 
 
 
-class BancoApp:
-    def __init__(self, janela):
-        self.janela = janela
-        self.janela.title("Sistema Bancário - POO em Python")
-        self.janela.geometry("850x400")
+class ContaInvestimento(ContaBancaria):
 
 
+    def __init__(self, cliente, numero, saldo,
+                 taxa_rendimento=0.01):
 
 
-        end1 = Endereco("Rua Aviador", 1000, "Cohab", "Ceará-Mirim")
-        end2 = Endereco("Rua Bonita", 123, "Centro", "Natal")
-        end3 = Endereco("Rua Curricular", 456, "São Geraldo", "Ceará-Mirim")
-        end4 = Endereco("Rua Centenárea", 426, "São Geraldo", "Ceará-Mirim")
+        super().__init__(cliente, numero, saldo)
 
 
+        self.__taxa_rendimento = taxa_rendimento
 
 
-        cliente1 = Cliente("Mateus", "100.200.300-04", end1)
-        cliente2 = Cliente("Pedro", "111.222.333-44", end2)
-        cliente3 = Cliente("Vitoria", "777.777.777-77", end3)
-        cliente4 = Cliente("João", "222.222.222-22", end4)
+    def render_investimento(self):
+        rendimento = self.get_saldo() * self.__taxa_rendimento
+        self.depositar(rendimento)
 
 
-        self.contas = [
-            ContaCorrente(cliente1, "1002", 200.0),
-            ContaCorrente(cliente2, "1003", 100.0),
-            ContaPoupanca(cliente3, "1004", 150.0),
-            ContaSalario(cliente4, "1006", 1718.0, "IFRN")
-        ]
-
-
-        self.criar_interface()
-
-
-    def criar_interface(self):
-        titulo = tk.Label(
-            self.janela,
-            text="Banco Python - Contas Bancárias",
-            font=("Arial", 18, "bold")
+    def exibir_dados(self):
+        return (
+            super().exibir_dados() +
+            f"\nTaxa de rendimento: {self.__taxa_rendimento*100:.2f}%"
         )
-        titulo.pack(pady=15)
-
-
-        self.frame_contas = tk.Frame(self.janela)
-        self.frame_contas.pack()
-
-
-        self.atualizar_tela()
-
-
-    def atualizar_tela(self):
-        for widget in self.frame_contas.winfo_children():
-            widget.destroy()
-
-
-        for conta in self.contas:
-            frame = tk.Frame(
-                self.frame_contas,
-                borderwidth=2,
-                relief="groove",
-                padx=10,
-                pady=10
-            )
-            frame.pack(side="left", padx=10, pady=10)
-
-
-            lbl_titular = tk.Label(
-                frame,
-                text=conta.get_titular().get_nome(),
-                font=("Arial", 14, "bold")
-            )
-            lbl_titular.pack()
-
-
-            lbl_numero = tk.Label(
-                frame,
-                text=f"Conta: {conta.get_numero()}"
-            )
-            lbl_numero.pack()
-
-
-            lbl_saldo = tk.Label(
-                frame,
-                text=f"Saldo: R$ {conta.get_saldo():.2f}",
-                font=("Arial", 12)
-            )
-            lbl_saldo.pack(pady=5)
-
-
-            btn_depositar = tk.Button(
-                frame,
-                text="Depositar",
-                width=15,
-                command=lambda c=conta: self.depositar(c)
-            )
-            btn_depositar.pack(pady=2)
-
-
-            btn_sacar = tk.Button(
-                frame,
-                text="Sacar",
-                width=15,
-                command=lambda c=conta: self.sacar(c)
-            )
-            btn_sacar.pack(pady=2)
-
-
-            btn_transferir = tk.Button(
-                frame,
-                text="Transferir",
-                width=15,
-                command=lambda c=conta: self.transferir(c)
-            )
-            btn_transferir.pack(pady=2)
-
-
-            btn_dados = tk.Button(
-                frame,
-                text="Exibir Dados",
-                width=15,
-                command=lambda c=conta: self.exibir_dados(c)
-            )
-            btn_dados.pack(pady=2)
-
-
-            btn_rendimento = tk.Button(
-                frame,
-                text="Render Juros",
-                width=15,
-                command=lambda c=conta: self.render_juros(c)
-            )
-            btn_rendimento.pack(pady=2)
-
-
-            btn_taxa = tk.Button(
-                frame,
-                text="Cobrar Tarifa",
-                width=15,
-                command=lambda c=conta: self.cobrar_taxa(c)
-            )
-            btn_taxa.pack(pady=2)
-
-
-    def depositar(self, conta):
-        valor = simpledialog.askfloat("Depósito", "Digite o valor do depósito:")
-
-
-        if valor is not None:
-            saldo_antes = conta.get_saldo()
-            conta.depositar(valor)
-
-
-            if conta.get_saldo() > saldo_antes:
-                messagebox.showinfo("Sucesso", "Depósito realizado.")
-            else:
-                messagebox.showerror(
-                    "Erro",
-                    "Valor inválido ou esta conta não permite depósitos comuns."
-                )
-
-
-        self.atualizar_tela()
-
-
-    def sacar(self, conta):
-        valor = simpledialog.askfloat("Saque", "Digite o valor do saque:")
-
-
-        if valor is not None:
-            if conta.sacar(valor):
-                messagebox.showinfo("Sucesso", "Saque realizado.")
-            else:
-                messagebox.showerror("Erro", "Saldo insuficiente ou valor inválido.")
-
-
-        self.atualizar_tela()
-
-
-    def transferir(self, conta_origem):
-        valor = simpledialog.askfloat("Transferência", "Digite o valor:")
-
-
-        if valor is None:
-            return
-
-
-        numero_destino = simpledialog.askstring(
-            "Transferência",
-            "Digite o número da conta destino:"
-        )
-
-
-        if numero_destino is None:
-            return
-
-
-        conta_destino = None
-
-
-        for conta in self.contas:
-            if conta.get_numero() == numero_destino.strip():
-                conta_destino = conta
-                break
-
-
-        if conta_destino is None:
-            messagebox.showerror("Erro", "Conta destino não encontrada.")
-            return
-
-
-        if conta_origem == conta_destino:
-            messagebox.showerror("Erro", "Não é possível transferir para a mesma conta.")
-            return
-
-
-        if conta_origem.transferir(valor, conta_destino):
-            messagebox.showinfo("Sucesso", "Transferência realizada.")
-        else:
-            messagebox.showerror("Erro", "Transferência não permitida, saldo insuficiente ou valor inválido.")
-
-
-        self.atualizar_tela()
-
-
-    def exibir_dados(self, conta):
-        messagebox.showinfo("Dados da Conta", conta.exibir_dados())
-
-
-    def render_juros(self, conta):
-        if conta.get_tipo_conta() == "Conta Poupança":
-            conta.render_juros()
-            messagebox.showinfo("Sucesso", "Rendimento efetuado.")
-            self.atualizar_tela()
-        else:
-            messagebox.showerror("Erro", "Conta não disponibiliza rendimento.")
-
-
-    def cobrar_taxa(self, conta):
-        if conta.get_tipo_conta() == "Conta Corrente":
-            if conta.cobrar_tarifa():
-                messagebox.showinfo("Sucesso", "Tarifa cobrada.")
-            else:
-                messagebox.showerror("Erro", "Saldo/limite insuficiente para cobrar a tarifa.")
-            self.atualizar_tela()
-        else:
-            messagebox.showerror("Erro", "Cobrança inválida para essa conta.")
-
-
-
-
-
-
-janela = tk.Tk()
-app = BancoApp(janela)
-janela.mainloop()
+    
+    def taxa_administracao(self): 
+        rendimento = self.get_saldo() * self.__taxa_rendimento
+        self.sacar(rendimento)
+
+    def get_tipo_conta(self):
+        return "Conta Investimento"

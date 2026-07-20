@@ -1,0 +1,21 @@
+Aluno: Mateus Pontes da Silva
+
+
+1 - parte prática
+
+
+2 - parte prática
+
+
+3 - parte prática
+
+
+4 - parte prática
+
+
+5 - a/ O metodos sacar, porque cada conta precisa de uma função de saque diferente, e a conta salário sendo para recusar. 
+
+    b/ A classe Cliente usa metodos de Endereco, isso é chamado de composição na programação orientada a objetos, porque Endereco pertence a Cliente.
+
+    c/ A Classe ContaBancaria é abstrata para facilitar a herança para sub classes, e serve como uma "classe mãe" para outras classes não precisarem repetir os metodos.
+
