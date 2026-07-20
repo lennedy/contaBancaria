@@ -27,9 +27,19 @@ class Cliente:
         f"\nCPF: {self.get_cpf()}"
         f"\n{self.get_endereco().exibir_dados()}"
         )
+    
+    def quantidade_contas(self):
+        return len(self.__contas)
 
     def adicionar_conta(self, conta):
         self.__contas.append(conta)
+
+    def consultar_saldo_total(self):
+        total = 0
+        for conta in self.__contas:
+            total += conta.get_saldo()
+
+        return total
 
 class Endereco:
     def __init__(self, rua, numero, bairro, cidade):
@@ -54,6 +64,7 @@ class Endereco:
         return f"Cidade: {self.get_cidade()},\nBairro: {self.get_bairro()},\nRua: {self.get_rua()},\nNúmero: {self.get_numero()}"
 
 
+    
 class ContaBancaria:
     numeros_contas = []
 
@@ -62,6 +73,7 @@ class ContaBancaria:
         self.__numero = numero
         self.__saldo = saldo
         ContaBancaria.numeros_contas.append(numero)
+        cliente.adicionar_contas(self)
 
     def get_titular(self):
         return self.__cliente  
@@ -99,6 +111,8 @@ class ContaBancaria:
             return True
         else:
             return False
+        
+   
 
     def exibir_dados(self):
         c = self.__cliente
@@ -124,6 +138,9 @@ class ContaBancaria:
             else:
                 vistas.append(numero)
         return duplicadas  
+    
+
+
 
 class ContaCorrente(ContaBancaria):
     def __init__(self, cliente, numero, saldo, limite, tarifa_mensal):
@@ -155,6 +172,9 @@ class ContaCorrente(ContaBancaria):
         )
     def get_tipo_conta(self):
         return "Conta Corrente"
+    
+    def pix(self, valor, conta_destino):
+        return self.transferir(valor, conta_destino)
 
 class ContaPoupanca(ContaBancaria):
     def __init__(self, cliente, numero, saldo, taxa_rendimento: float):
@@ -222,3 +242,37 @@ class ContaSalario(ContaBancaria):
 
         self.set_saldo(self.get_saldo() + valor)
         return True
+    
+    def pix(valor, conta_destino):
+        return False
+    
+
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, cliente, numero, saldo, taxa_rendimento = float, taxa_administracao= float):
+            super().__init__(cliente, numero, saldo)
+            self.__taxa_rendimento = taxa_rendimento
+            self.__taxa_administracao = taxa_administracao
+
+    def render_investimento(self):
+        investimento = (self.get_saldo() * self.__taxa_rendimento)- self.__taxa_administracao
+        return self.depositar(investimento)
+
+
+    def get_tipo_conta(self):
+        return "Conta Investimento"
+    
+    def exibir_dados(self):
+        return (
+            
+            super().exibir_dados()+
+            f"\nTaxa de investimento:{self.__taxa_rendimento}"
+            f"\n Tipo: {self.get_tipo_conta()}"
+            
+            )
+    
+
+
+    
+
+
+

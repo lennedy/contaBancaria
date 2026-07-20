@@ -1,0 +1,10 @@
+Questão 5.
+ a. O metódo que deverá ser sobrescrito é o def sacar(), pois como a Conta Salário normalmente usa o sacar da Conta Bancária. 
+Teria que mudar, pois na Conta Bancaria usa outro jeito de sacar.
+
+b. Um cliente não existi sem Endereço. Mas Endereço pode existir sem cliente.
+    É essa a relação, uma relação de dependencia e independencia.
+
+c. Ela foi definida como classe abstrata porque ela é uma Conta, onde tem caracteriticas iguais as outras contas. O que muda é só alguns metódos e parametros
+    Conta Bancaria tem Nome, Cpf, numero, e isso todas as outras também tem. E para não precisa repetir isso em todas, usamos o super() nas outras classes.
+
