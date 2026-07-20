@@ -1,0 +1,11 @@
+QUESTÃO 5
+
+a) Limites_saques. Porque a quantidade de saques realizados não pode passar do limites de saques dispononíveis, mas se fizermos uma sobrescrita em Limites_saques podemos 
+aumentar ou diminuir a quantidade de saques que podemos fazer, assim alteraria a forma de saque.
+
+b) O relacionamento entre Cliente e Endereco é composição. Porque Cliente existe independente a Endereco, mas Endereco é dependente de Cliente, sendo criado dentro de Cliente.
+
+c) A classe ContaBancaria foi definida como classe abstrata porque ela é usada apenas como molde para as outras classes, tendo atributos necessários para a criação de uma conta
+no banco. Essa decisão traz diversas vantagens para o projeto, um deles é, quando formos criar as outras classes, ContaBancaria pode ser herdada e não será necessário reescrever
+algumas partes do código, além de que, se um método precisar ser reformulado em outra classe, ele pode ser sobrescrito na classe que precisa, mas não vai ser modificado nas outras
+classes, já que é um método da classe ContaBancaria, ou seja, a classe mãe.
