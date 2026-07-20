@@ -1,0 +1,5 @@
+a = por que a conta salario possui regras diferentes de saque(limite de saques), sendo necessario sobrescrever esse metodo.
+
+b = associação, porque foi utilizado um cliente, que possui um endereço, mas ambos podem existir separadamente.
+
+c = a classe conta bancaria é abstrata porque representa um modelo generico de conta. a vantagem é impedir a criação de contas genericas e obrigar que as subclasses implementem seus comportamentos.
