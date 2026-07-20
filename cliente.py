@@ -32,8 +32,11 @@ class Cliente:
         for n in self.__contas:
             saldo_total += n.get_saldo()
         return saldo_total
-
-
+    def quantidade_contas(self):
+        if len(self.__contas)>=1:
+            return len(self.__contas)
+        else:
+            return len(self.__contas)
 
 
     

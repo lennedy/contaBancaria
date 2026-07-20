@@ -6,7 +6,7 @@ class ContaBancaria:
         self.__numero =  numero
         self.__saldo = saldo
         ContaBancaria.numeros_contas.append(self.__numero)
-        cliente.adicionar_conta(self) # adicionar essa linha pro método consultar_saldo_total funcionar
+        cliente.adicionar_conta(self) 
     @classmethod
     def existe_conta_duplicada(cls):
         return len(cls.numeros_contas) != len(set(cls.numeros_contas))
@@ -20,18 +20,15 @@ class ContaBancaria:
                 vistos.add(numero)
         return cls.contas_duplicada
     def get_cliente(self):
-        return self.__cliente
+        return self.__cliente.get_nome()
     
     def get_numero(self):
         return self.__numero
-
     def get_saldo(self):
         return self.__saldo
     def set_saldo(self,valor):
         self.__saldo = valor 
-        
-    
-    def get_tipo_conta(self):
+    def get_tipo_conta(self):     
         return "Conta Bancária"
     def depositar(self,valor):
         self.__saldo += valor
@@ -48,8 +45,6 @@ class ContaBancaria:
                 return True
             else:
                 return False
-
-
     def exibir_dados(self):
         return (f"{self.__cliente.exibir_dados()}\n"
                 f"=== CONTA ===\n"

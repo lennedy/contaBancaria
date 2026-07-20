@@ -1,0 +1,9 @@
+A - o método sacar herdado da classe mãe mas a alteração é feita somente no escopo da classe filha já que é uma mudança mais específica,assim evitamos mudar
+    o método sacar dos outros tipo de conta
+
+
+B - Composição,Endereço é criada dentro do construtor de Cliente, relacionamento um para um,cada Cliente tem o próprio Endereço,traz o pensamento que Endereço deve ser criado dentro de Endereço
+
+C - Porque é a classe mãe, todas as classes herdam dela, ela serve como modelo base para todas,evita repetir código pelo método super
+    as classes filhas herdam seus atributos e Métodos,se necessário alguma alteração é só sobrescrever na própria classe filha
+    e se não precisar alterar,você usa o método herdado da classe mãe
