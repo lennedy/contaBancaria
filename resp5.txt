@@ -1,0 +1,6 @@
+5:
+a: o sacar, por que se não fosse assim seria permitido saquar o quanto quisesse na conta salario
+
+b: o endereço depende do cliente, se nao tiver a classe Cliente, não pode ter endereço
+
+c: porque ela é como se fosse um molde, com metodos base para usar em outras classes. a vantagem é que o codigo fica mais rapido, limpo, organizado e de melhor entendimento.
