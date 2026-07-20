@@ -29,6 +29,7 @@ class Cliente:
         self.__cpf=cpf
         self.__contas=[]
         self.__endereco = endereco
+        self.__consultar_saldo_total = {}
     def get_contas(self):
         return self.__contas    
     
@@ -45,6 +46,7 @@ class Cliente:
         return (
         f"Nome: {self.__nome}\n"
         f"CPF: {self.__cpf}\n"
+
         f"{self.__endereco.exibir_dados()}"
     )
     
@@ -52,6 +54,12 @@ class Cliente:
         self.__contas.append(conta)
     
 
+    def quantidade_contas(self,conta):
+        self.__contas.append(conta)
+
+
+    def consultar_saldo_total(self,conta):
+        self.__contas.append(conta)
 
 class ContaBancaria:
 
@@ -78,7 +86,27 @@ class ContaBancaria:
         return self.__saldo
     def set_saldo(self, saldo):
         self.__saldo = saldo
-    
+
+class  ContaInvestimento:
+    numero_contas=[]
+    contas_duplicadas1=[]
+
+    numero_contas = []
+    contas_duplicadas = []
+    def __init__(self, nome, conta, saldo):
+        self.__cliente = nome
+        self.__numero = conta
+        self.__saldo = saldo
+        ContaBancaria.numero_contas.append(self.__numero)
+        self.__cliente.adicionar_conta(self)
+        
+    taxa_rendimento:float
+    taxa_administracao:float
+    def get_tipo_conta()->str
+
+    render_investimento:float
+
+
 
     def depositar(self,valor):
         if valor > 0:
