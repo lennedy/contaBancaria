@@ -43,6 +43,10 @@ class Cliente:
     
     def adicionar_conta(self,conta):
         self.__contas.append(conta)
+    def quantidade_contas(self):
+        return len(self.__contas)
+    def consultar_saldo_total(self):
+        return sum(self.__contas.get_saldo() for conta in self.__contas)
     
 class ContaBancaria:
 
@@ -118,7 +122,6 @@ class ContaBancaria:
         """
    
     
-
     #ta certo
     @classmethod
     def contas_duplicadas(cls):
@@ -153,10 +156,17 @@ class ContaCorrente(ContaBancaria):
            
     
     def sacar(self, valor):
-        pass
+        super().sacar()
 
     def cobrar_tarifa(self):
         super().sacar(self.__tarifa_mensal)
+
+    def pix(valor,conta_destino):
+        if super().sacar(valor):
+            super().depositar(conta_destino)
+            return True
+        else:
+            return False
     
 class ContaPoupanca(ContaBancaria):
     def __init__(self, nome, conta, saldo,taxa_rendimento):
@@ -179,3 +189,15 @@ class ContaSalario(ContaBancaria):
         self.__empresa=empresa
         self.__saques_realizados=saques_realizados
         self.__limite_saques=limite_saques
+
+
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, nome, conta, saldo,taxa_redimento,taxa_administracao):
+        super().__init__(nome, conta, saldo)
+        self.taxa_rendimento=taxa_redimento
+        self.taxa_admistracao=taxa_administracao
+    def get_tipo_conta(self):
+        return "Conta Investimento"
+    def render_investimento(self,taxa_rendimento):
+        super()
+        
