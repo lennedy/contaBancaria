@@ -55,6 +55,15 @@ class Cliente:
             f"CPF: {self.__cpf}\n"
             f"Endereço: {self.__endereco.exibir_dados()}"
         )
+    def quantidade_contas(self, conta):
+        for conta in self.__contas:
+          self.__contas.append(conta)
+        return self.__contas
+    
+    def consultar_saldo_total(self, saldo, contas):
+        self.saldo = saldo
+        self.contas = contas
+        return len(saldo)
     
 
 class ContaBancaria:
@@ -127,19 +136,8 @@ class ContaBancaria:
             obj.depositar(valor)
             return True
         return False
-    
-    def quantidade_contas(self, conta):
-        for conta in self.__contas:
-          self.__contas.append(conta)
-        return self.contas
-    
-    def consultar_saldo_total(self, saldo, contas):
-        self.saldo = saldo
-        self.contas = contas
-        return len(saldo)
         
 
-    
 
 class ContaCorrente(ContaBancaria):
     def __init__(self, cliente, conta, saldo, limite, tarifa_mensal):
@@ -164,10 +162,23 @@ class ContaPoupanca(ContaBancaria):
     
 class ContaSalario(ContaBancaria):
     def __init__(self, cliente, conta, saldo, saques_realizados, empresas, limite_saques):
-      super().__init__()
+      super().__init__(cliente, conta, saldo)
       self.__saques_realizados = saques_realizados
       self.__empresas = empresas
       self.__limite_saques = limite_saques
       self.contador = 0
+
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, taxa_rendimento = 0, taxa_administracao = 0):
+      self.__taxa_rendimento = taxa_rendimento
+      self.__taxa_administração = taxa_administracao
+   
+    def tipo_conta(self):
+        return ContaInvestimento
+    
+    def render_investimento(self):
+        rendimento = self.__saldo * self.__taxa_rendimento
+        self._saldo = self._saldo = self.__taxa_administração
+        return rendimento
 
       

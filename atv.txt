@@ -1,0 +1,14 @@
+5.
+ a.
+def sacar(self, valor):
+        if valor > 0 and self.saldo >= valor:
+            self.__saldo -= valor
+            return True
+        return False
+
+b.
+as duas são classes mães, o codigo não funcionaria sem elas
+
+
+c.
+pois ao definir como classe abstrata, a classe, fica mais malevael e fácil de manipular ou reescrever codigos
