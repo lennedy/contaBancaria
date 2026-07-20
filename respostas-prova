@@ -1,0 +1,36 @@
+# 1.
+# def quantidade_contas(self):
+    #    return len(numero_contas): 
+
+# 2.
+# def consultar_saldo_total(self):
+    #    return len(numeros_contas(sum(get_saldo))):
+
+# 3.
+# def pix(self, valor, conta_destino, conta_origem):
+    #    if self._saldo > 0:
+     #       if conta_origem - valor and + valor == conta_destino:
+    #            return True
+    #    else:
+    #        return False
+
+# 4.
+# class ContaInvestimento(ContaBancaria):
+#    def __init__(self, cliente: Cliente, numero: str, saldo: float, taxa_rendimento: float, taxa_administracao: float):
+#        super().__init__(cliente, numero, saldo, taxa_rendimento, taxa_administracao)
+#
+#    def get_tipo_conta(self) -> str:
+#        return "Conta Investimento"
+    
+#    def render_investimento(self, taxa_rendimento, taxa_administracao, render):
+#        render = []
+#        if self._saldo - taxa_administracao == taxa_rendimento:
+#            render.append
+#            return True
+#        else:
+#            return False
+
+# 5.
+# a) O método sacar, pois ele limita a quantidade de saques.
+# b) Ambas as classes retornam informações iniciais para posteriormente chegarem a ContaBancaria que vai ser herdada por outras contas. 
+# c) A classe ContaBancaria foi definida como uma classe abstrata, pois pode ser alterada/ter ajustes depois por usar get e @classmethod.
