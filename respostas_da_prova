@@ -1,0 +1,3 @@
+a) o método sacar, pois a ContaSalario possui regras especificas para realizar saques
+b) É um relacionamento de compossição pós todo Cliente precisa ter um Endereço
+c) Porque serve de modelo para as outras contas, isso evita código repetido

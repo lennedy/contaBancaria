@@ -24,11 +24,13 @@ class Endereco:
         return f'Rua: {self.__rua}\nNumero: {self.__numero}\nBairro: {self.__bairro}\nCidade: {self.__cidade}'
 
 class Cliente:
-    def __init__(self,nome,cpf,endereco):
+    def __init__(self,nome,cpf,endereco,quantidade_contas, consultar_saldo_total):
         self.__nome=nome
         self.__cpf=cpf
         self.__contas=[]
         self.__endereco = endereco
+        self.__quantidade_contas = quantidade_contas()
+        self.__consultar_saldo_total = consultar_saldo_total()
     def get_contas(self):
         return self.__contas    
     
@@ -41,11 +43,19 @@ class Cliente:
     def get_endereco(self):
         return self.__endereco
     
+    def get_quantidade_contas(self):
+        return self.__quantidade_contas
+
+    def get_consultar_saldo_total(self):
+        return self.__consultar_saldo_total
+
     def exibir_dados(self):
         return (
         f"Nome: {self.__nome}\n"
         f"CPF: {self.__cpf}\n"
         f"{self.__endereco.exibir_dados()}"
+        f"Quantidade de Contas:{self.__quantidade_contas}\n"
+        f"Consultar Saldo Total: {self.__consultar_saldo_total}\n"
     )
     
     def adicionar_conta(self,conta):
@@ -114,6 +124,7 @@ class ContaBancaria:
     Bairro: {self.__cliente.get_endereco().get_bairro()}
     Conta: {self.__numero}
     Saldo: R$ {self.__saldo:.2f}
+    
     """
    
     
@@ -136,4 +147,4 @@ class ContaBancaria:
         return len(cls.numero_contas) != len(set(cls.numero_contas))
     
 
-    
+    class ContaCorrente:
