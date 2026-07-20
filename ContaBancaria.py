@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox, simpledialog
+from typing import List
 
-class Endereço:
+class Endereco:
     def __init__(self, rua, numero, bairro, cidade):
         self.__rua = rua
         self.__numero = int(numero)
@@ -29,7 +30,7 @@ class Cliente:
         self.__nome = nome
         self.__cpf = cpf
         self.__endereço = endereço
-        self.__contas = []
+        self.__contas: List['ContaBancaria'] = []
     
     def get_nome(self):
         return self.__nome
@@ -40,8 +41,15 @@ class Cliente:
     def get_endereco(self):
         return self.__endereço
     
-    def adicionar_conta(self, cnt):
-        self.__contas.append(cnt)
+    def adicionar_conta(self, conta: 'ContaBancaria') -> None:
+        if conta not in self.__contas:
+            self.__contas.append(conta)
+    
+    def quantidade_contas(self):
+        return len(self.__contas)
+    
+    def consultar_saldo_total(self):
+        return sum(conta.get_saldo() for conta in self.__contas)
     
     def exibir_dados(self):
         return f'Nome: {self.__nome} \nCPF: {self.__cpf} \nEndereço: {self.__endereço}'
@@ -55,7 +63,9 @@ class ContaBancaria:
         self.__titular = titular
         self.__numero = numero
         self.__saldo = saldo
-        ContaBancaria.numeros_contas.append(numero)
+
+        ContaBancaria.numeros_contas.append(self.__numero)
+        Cliente.adicionar_conta(self)
 
     def get_titular(self):
         return self.__titular.get_nome()
@@ -120,11 +130,16 @@ class ContaCorrente(ContaBancaria):
         else:
             return False
         
-    def cobrar_taxa(self):
+    def cobrar_tarifa(self):
         self.sacar(self.__tarifa_mensal)
+        return True
 
-    def get_tipo(self):
+    def get_tipo_conta(self):
         return "Conta Corrente"
+    
+    def pix(self, valor, conta_destino):
+        self.transferir(valor, conta_destino)
+        return True
 
     def exibir_dados(self):
         return f'{super().exibir_dados()}\n\n---------------------------\n\nLimite: {self.__limite}\nTarifa mensal: {self.__tarifa_mensal}'
@@ -146,7 +161,7 @@ class ContaPoupanca(ContaBancaria):
         self._ContaBancaria__saldo += rendimento
         return None
     
-    def get_tipo(self):
+    def get_tipo_conta(self):
         return "Conta Poupança"
     
     def exibir_dados(self):
@@ -182,3 +197,17 @@ class ContaSalario(ContaBancaria):
     
     def exibir_dados(self):
         return f"{super().exibir_dados()}\nEmpresa:{self.__empresa}\n Saques Realizados:{self.__saques_realizados}\nLimite de Saque:{self.__limite_saques}"
+    
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, titular, numero, saldo, taxa_rendimento, taxa_administracao):
+        super().__init__(titular, numero, saldo)
+        self.__taxa_rendimento = taxa_rendimento
+        self.__taxa_administracao = taxa_administracao
+    
+    def get_tipo_conta(self):
+        return "Conta Investimento"
+    
+    def render_investimento(self):
+        rdm = self.__saldo + self.__taxa_rendimento
+        adm = rdm - self.__taxa_administracao
+        return adm

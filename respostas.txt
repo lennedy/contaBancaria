@@ -1,0 +1,10 @@
+5.
+a - Limite_saques. Pois para que o método sacar seja bem sucedido e não haja falhas, o saque total não pode ultrapassar do limite que o cliente exige, então colocar
+no método sacar a sobrescrita do método limite_saques é essencial para que o código rode conforme o que foi proposto.
+
+b - Pois o Cliente sempre exige um Endereço, e um único endereço podem ter vários clientes mas um cliente pode haver apenas ter um endereço, e essa relação entre eles é
+utilizada pois o código usa essas informações para exibir nos dados do cliente e no construtor das duas classes, o cliente quem exige o endereço, e não o endereço que exige
+um cliente.
+
+c - Pois todas as outras classes vão herdar essa classe, então ver se existe uma conta duplicada é importante para não haver confusões ou estranhamentos na hora de acionar
+o código
