@@ -48,7 +48,14 @@ class Cliente:
             f"CPF: {self.__cpf}\n"
             f"Endereço: {self.__endereco.exibir_dados()}"
         )
-
+    
+    def exibir_quantidade_contas(self):
+        return len(self.__contas)
+    
+    def consultar_saldo_total(self):
+        return sum(self.__contas.get_saldo() for conta in self.__contas)
+     
+        
 
 class ContaBancaria:
 
@@ -61,7 +68,9 @@ class ContaBancaria:
 
         cliente.adicionar_conta(self)
 
-        ContaBancaria.numero_contas.append(numero)
+        ContaBancaria.numero_contas.append(self.__numero)
+        cliente.adicionar_conta(self)
+    
 
     @classmethod
     def verificar_conta_duplicada(cls):
@@ -142,6 +151,15 @@ class ContaCorrente(ContaBancaria):
     
     def get_tipo_conta(self):
         return "Conta Corrente"   
+    
+    def pix(self, valor, conta_destino):
+        if self.sacar(valor):
+            conta_destino.depositar(valor)
+            return True
+        return False
+        
+
+
 
 class ContaPoupanca(ContaBancaria):
     def __init__(self, nome, conta, saldo, taxa_rendimento):
@@ -193,9 +211,25 @@ class ContaSalario(ContaBancaria):
     def transferir(self, valor, destino):
         return False
     
+    def pix(valor, conta_destino):
+        return False
+    
     def exibir_dados(self):
         return f"Nome: {self._ContaBancaria__cliente.get_nome()}\nConta: {self._ContaBancaria__numero}\nSaldo: R$ {self._ContaBancaria__saldo:.2f}\nCPF: {self._ContaBancaria__cliente.get_cpf()}\n{self._ContaBancaria__cliente.get_endereco().exibir_dados()}\nEmpresa: {self.__empresa}\nSaques realizados: {self.__saques_realizados}\nLimite de saques: {self.__limite_saques}"
 
     def get_tipo_conta(self):
         return 'Conta Salário'
+
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, cliente, numero, saldo, taxa_rendimento: float, taxa_administracao: float):
+        super().__init__(cliente, numero, saldo)
+        self.__taxa_rendimento = taxa_rendimento
+        self.__taxa_administracao = taxa_administracao
+
+    def get_tipo_conta() -> str:
+        return ContaInvestimento
+    
+    def render_investimento():
+        pass
+
 
