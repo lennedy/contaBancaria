@@ -1,4 +1,4 @@
-class Endereço:
+class Endereco:
     def __init__(self, rua, numero, bairro, cidade):
         self.__rua = rua
         self.__numero = int(numero)
@@ -42,7 +42,16 @@ class Cliente:
 
     def exibir_dados(self):
         return f'Nome: {self.__nome}\nCPF: {self.__cpf}\n{self.__endereco.exibir_dados()}'
+    
+    def consultar_saldo_total(self):
+        total=0
+        for conta in self.__contas:
+            total+=conta.get._saldo()
 
+        return total    
+
+    def quantidade_contas(self):
+            return len(self.__contas)
 
 class ContaBancaria:
 
@@ -126,6 +135,9 @@ class ContaCorrente(ContaBancaria):
 
     def get_tipo_conta(self):
         return "Conta Corrente"
+    
+    def pix(self,valor,conta_destino):
+        return self.transferir(valor,conta_destino)
 
     def exibir_dados(self):
         return (
@@ -200,3 +212,26 @@ class ContaSalario(ContaBancaria):
             f'Saques realizados: {self.__saques_realizados}\n'
             f'Limite de saques: {self.__limite_saques}'
         )
+
+
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, titular, numero, saldo,taxa_rendimento,taxa_administracao):
+        super().__init__(titular, numero, saldo)
+        self.__taxa_rendimento:float=taxa_rendimento
+        self.__taxa_administracao:float=taxa_administracao
+
+    def get_tipo_conta(self):
+            return "Conta Investimento"
+        
+    def render_investimento(self):
+            rendimento=self.__saldo* self.__taxa_rendimento
+            self.__saldo+= rendimento
+            self.__saldo-=self.__taxa_administracao
+
+    def exibir_dados(self):
+        return (
+                super().exibir_dados()+
+                f"Tipo da Conta:{self.get_tipo_conta()}"
+                f"Taxa de rendimento:{self.__taxa_rendimento}"
+                 )
+

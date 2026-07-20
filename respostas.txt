@@ -1,0 +1,5 @@
+QUESTÃO 5:
+    a- O método de sacar,pois é nele que realizarmos a operação de saque.
+    b-O relacionamento existente entre Cliente e Endereço gira em torno da composição, pois é uma relação de dependência entre eles,no caso,
+     a classe Cliente que precisa das informações de endereço.
+    c-Pois a classe abstrata serve de modelo para as demais contas ,evita a criação de objetos genéricos e a reutilização do código.
