@@ -1,4 +1,4 @@
-class Endereço:
+class Endereco:
     def __init__(self, rua, numero, bairro, cidade):
         self.__rua = rua
         self.__numero = int(numero)
@@ -39,6 +39,13 @@ class Cliente:
     
     def adicionar_conta(self, cnt):
         self.__contas.append(cnt)
+
+    def quantidade_contas(self):
+        return len(self.__contas)
+
+    def consultar_saldo_total(self,):
+        return sum(c.saldo for c in self.__contas)
+        
     
     def exibir_dados(self):
         return f'Nome: {self.__nome} \nCPF: {self.__cpf} \nEndereço: {self.__endereço}'
@@ -113,6 +120,12 @@ class ContaCorrente(ContaBancaria):
         return "Conta Corrente"
     def exibir_dados(self):
         return f'{super().exibir_dados()}\nLimite:{self.__limite:.2f}R$\nTarifa:{self.__tarifa_mensal:.2f}R$'
+    def pix (self, valor, conta_destino):
+        if valor > 0 and self.get_saldo() >= valor:
+            if conta_destino.depositar(valor):
+                self.ContaBancaria__saldo -= valor
+                return True
+            return False
     
 class ContaPoupanca(ContaBancaria):
     def __init__(self, cliente, numero, saldo,taxa_rendimento):
