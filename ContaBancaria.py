@@ -1,8 +1,10 @@
 class Cliente:
-    def __init__(self, nome, cpf, endereco):
+    def __init__(self, nome, cpf, endereco, quantidade_contas, consultar_saldo_total):
         self.__nome = nome
         self.__cpf = cpf
         self.__endereco = endereco
+        self.__quantidade_contas = quantidade_contas
+        self.__consultar_saldo_total = consultar_saldo_total
 
     def get_nome(self):
         return self.__nome
@@ -12,7 +14,29 @@ class Cliente:
 
     def get_endereco(self):
         return self.__endereco
+    
+    def get_quantidade_contas(self):
+        return self.__quantidade_contas
+    
+    def get_consultar_saldo_total(self):
+        return self.__consultar_saldo_total
 
+class ContaInvestimento:
+    def __init__(self, taxa_rendimento, taxa_administracao, tipo_conta):
+        self.__taxa_rendimento = taxa_rendimento
+        self.__taxa_administracao = taxa_administracao
+        self.__tipo_conta = tipo_conta
+
+    def get_taxa_rendimento(self):
+        return self.__taxa_rendimento
+    taxa_rendimento:float
+    
+    def get_taxa_administracao(self):
+        return self.__taxa_administracao
+    taxa_administracao:float
+    
+    def get_tipo_conta(self):
+        return self.__tipo_conta()>str
 
 class Endereco:
     def __init__(self, rua, bairro):
@@ -24,7 +48,6 @@ class Endereco:
 
     def get_bairro(self):
         return self.__bairro
-
 
 class ContaBancaria:
 
@@ -95,11 +118,15 @@ class ContaBancaria:
 
 
 class ContaCorrente(ContaBancaria):
-    def __init__(self, cliente, numero, saldo, limite, tarifa_mensal):
-        super().__init__(cliente, numero, saldo)
+    def __init__(self, cliente, numero, saldo, limite, tarifa_mensal, Pix):
+        super().__init__(cliente, numero, saldo, Pix)
         self.__limite = limite
         self.__tarifa_mensal = tarifa_mensal
+        self.__Pix = Pix
 
+    def get_Pix(self):
+        return self.__Pix
+    
     def get_limite(self):
         return self.__limite
 
