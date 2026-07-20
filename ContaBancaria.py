@@ -125,176 +125,100 @@ class ContaBancaria:
                 vistas.append(numero)
         return duplicadas  
 
-       
-class BancoApp:
-    def __init__(self, janela):
-        self.janela = janela
-        self.janela.title("Sistema Bancário - POO em Python")
-        self.janela.geometry("850x400")
+class ContaCorrente(ContaBancaria):
+    def __init__(self, cliente, numero, saldo, limite, tarifa_mensal):
+        super().__init__(cliente, numero, saldo)
+        self.__limite = limite
+        self.__tarifa_mensal = tarifa_mensal
 
+    def cobrar_tarifa(self):
+        self.sacar(self.__tarifa_mensal)
 
-        cliente1 = Cliente("Leo", "676.676", Endereco("Santa Terezinha", "456", "Bom Jesus", "Ceará-Mirim") )
-        cliente2 = Cliente("Caio", "456.909", Endereco("Av. Brasil", "984", "Xique-xique", "São Gonçalo") )
-        cliente3 = Cliente("Sofócles", "123.456", Endereco("Avelino cruz", "67", "Baxa", "Pureza") )
-        cliente4 = Cliente("Dhimy", "900.865", Endereco("Palha", "001", "Cohab", "Brogodó") )
+    def sacar(self, valor):
 
-        self.contas = [
-            ContaBancaria(cliente1, 1001, 500),
-            ContaBancaria(cliente2, 1002, 1000),
-            ContaBancaria(cliente3, 1003, 300),
-            ContaBancaria(cliente4, 1004, 20),
-        ]
+        if valor < 0:
+            return False
+
+        saldo_total = self.get_saldo() + self.__limite
+        if valor <= saldo_total:
+            self.set_saldo(self.get_saldo() - valor)
+            return True
+
+        return False
     
-        if ContaBancaria.existe_conta_duplicada():
-            messagebox.showerror("Erro", "Existe conta duplicada")
-            messagebox.showinfo("Contas duplicadas", str(ContaBancaria.contas_duplicadas()))
-            exit()
-
-        self.criar_interface()
-
-    def criar_interface(self):
-        titulo = tk.Label(
-            self.janela,
-            text="Banco Python - Contas Bancárias",
-            font=("Arial", 18, "bold")
+    def exibir_dados(self):
+        return (
+            super().exibir_dados() +
+            f"\nTipo: {self.get_tipo_conta()}"
+            f"\nlimite: {self.__limite}" 
+            f"\ntarifa: {self.__tarifa_mensal}"
         )
-        titulo.pack(pady=15)
+    def get_tipo_conta(self):
+        return "Conta Corrente"
 
-        self.frame_contas = tk.Frame(self.janela)
-        self.frame_contas.pack()
+class ContaPoupanca(ContaBancaria):
+    def __init__(self, cliente, numero, saldo, taxa_rendimento: float):
+        super().__init__(cliente, numero, saldo)
+        self.__taxa_rendimento = taxa_rendimento
 
-        self.atualizar_tela()
+    def sacar(self, valor):
+        return super().sacar(valor)
 
+
+    def render_juros(self):
+        juros = self.get_saldo() * self.__taxa_rendimento
+        self.depositar(juros)
     
-    def atualizar_tela(self):
-        for widget in self.frame_contas.winfo_children():
-            widget.destroy()
-
-        for conta in self.contas:
-            frame = tk.Frame(
-                self.frame_contas,
-                borderwidth=2,
-                relief="groove",
-                padx=10,
-                pady=10
-            )
-            frame.pack(side="left", padx=10, pady=10)
-
-            lbl_titular = tk.Label(
-                frame,
-                text=conta.get_titular().get_nome(),
-                font=("Arial", 14, "bold")
-            )
-            lbl_titular.pack()
-
-            lbl_numero = tk.Label(
-                frame,
-                text=f"Conta: {conta.get_numero()}"
-            )
-            lbl_numero.pack()
-
-            lbl_saldo = tk.Label(
-                frame,
-                text=f"Saldo: R$ {conta.get_saldo():.2f}",
-                font=("Arial", 12)
-            )
-            lbl_saldo.pack(pady=5)
-
-            btn_depositar = tk.Button(
-                frame,
-                text="Depositar",
-                width=15,
-                command=lambda c=conta: self.depositar(c)
-            )
-            #btn_depositar.config(state="disabled")
-            btn_depositar.pack(pady=2)
-
-            btn_sacar = tk.Button(
-                frame,
-                text="Sacar",
-                width=15,
-                command=lambda c=conta: self.sacar(c)
-            )
-            #btn_sacar.config(state="disabled")
-            btn_sacar.pack(pady=2)
-
-            btn_transferir = tk.Button(
-                frame,
-                text="Transferir",
-                width=15,
-                command=lambda c=conta: self.transferir(c)
-            )
-           # btn_transferir.config(state="disabled")
-            btn_transferir.pack(pady=2)
-
-            btn_dados = tk.Button(
-                frame,
-                text="Exibir Dados",
-                width=15,
-                command=lambda c=conta: self.exibir_dados(c)
-            )
-           # btn_dados.config(state="disabled")
-            btn_dados.pack(pady=2)
-
-    def depositar(self, conta):
-        valor = simpledialog.askfloat("Depósito", "Digite o valor do depósito:")
-
-        if valor is not None:
-            if conta.depositar(valor):
-                messagebox.showinfo("Sucesso", "Depósito realizado.")
-            else:
-                messagebox.showerror("Erro", "Valor inválido.")
-
-        self.atualizar_tela()
-
-    def sacar(self, conta):
-        valor = simpledialog.askfloat("Saque", "Digite o valor do saque:")
-
-        if valor is not None:
-            if conta.sacar(valor):
-                messagebox.showinfo("Sucesso", "Saque realizado.")
-            else:
-                messagebox.showerror("Erro", "Saldo insuficiente ou valor inválido.")
-
-        self.atualizar_tela()
-
-    def transferir(self, conta_origem):
-        valor = simpledialog.askfloat("Transferência", "Digite o valor:")
-
-        if valor is None:
-            return
-
-        numero_destino = simpledialog.askinteger(
-            "Transferência",
-            "Digite o número da conta destino:"
+    def exibir_dados(self):
+        return (
+            super().exibir_dados() +
+            f"\nTipo: {self.get_tipo_conta()}" 
+            f"\nTaxa de rendimento: {self.__taxa_rendimento}"
         )
 
-        conta_destino = None
+    def get_tipo_conta(self):
+        return "Conta Poupança"
+    
 
-        for conta in self.contas:
-            if conta.get_numero() == numero_destino:
-                conta_destino = conta
-                break
-
-        if conta_destino is None:
-            messagebox.showerror("Erro", "Conta destino não encontrada.")
-            return
-
-        if conta_origem == conta_destino:
-            messagebox.showerror("Erro", "Não é possível transferir para a mesma conta.")
-            return
-
-        if conta_origem.transferir(valor, conta_destino):
-            messagebox.showinfo("Sucesso", "Transferência realizada.")
-        else:
-            messagebox.showerror("Erro", "Saldo insuficiente ou valor inválido.")
-
-        self.atualizar_tela()
-
-    def exibir_dados(self, conta):
-        messagebox.showinfo("Dados da Conta", conta.exibir_dados())
+class ContaSalario(ContaBancaria):
+    def __init__(self, cliente, numero, saldo, empresa, limite_de_saque):
+            super().__init__(cliente, numero, saldo)
+            self.__empresa = empresa
+            self.__limite_de_saques = limite_de_saque
+            self.__saques_realizados = 0
 
 
-#janela = tk.Tk()
-#app = BancoApp(janela)
-#janela.mainloop()
+    def depositar(self, valor):
+        return False
+
+    def get_tipo_conta(self):
+        return "Conta Salário"
+    def sacar(self, valor):
+            if self.__saques_realizados >= self.__limite_de_saques:
+                return False
+            
+            if super().sacar(valor):
+                self.__saques_realizados += 1
+                return True
+            
+            return False
+        
+    def transferir(self, valor, conta_destino):
+            return False
+        
+    def exibir_dados(self):
+            return(
+                super().exibir_dados() +
+                f"\nTipo: {self.get_tipo_conta()}" 
+                f"\nEmpresa: {self.__empresa}"
+                f"\nLimite de saques: {self.__limite_de_saques}"
+                f"\nsaques realizados: {self.__saques_realizados}"
+
+            )
+    
+    def receber_salario(self, valor):
+        if valor <= 0:
+           return False
+
+        self.set_saldo(self.get_saldo() + valor)
+        return True
