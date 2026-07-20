@@ -41,6 +41,15 @@ class Cliente:
     
     def adicionar_conta(self, conta):
         self.__contas.append(conta)
+
+    def quantidade_contas(self):
+        return len(self.__contas)
+    
+    def consultar_saldo_total(self):
+        contador = 0
+        for conta in self.__contas:
+            contador += conta.get_saldo()
+        return contador
     
 
 class ContaBancaria:
@@ -64,6 +73,10 @@ class ContaBancaria:
     @property
     def saldo(self):
         return self.__saldo
+    
+    @saldo.setter
+    def saldo(self, valor):
+        self.__saldo = valor
     
     def get_titular(self):
         return self.__cliente.get_nome()
@@ -138,6 +151,14 @@ class ContaCorrente(ContaBancaria):
 
     def get_tipo_conta(self):
         return 'Conta Corrente'
+    
+    def pix(self, valor, conta_destino):
+        if self.sacar(valor):
+            conta_destino.depositar(valor)
+            return True
+        else:
+            return False
+
 
 class ContaPoupanca(ContaBancaria):
     def __init__(self, nome, conta, saldo, taxa_rendimento):
@@ -165,6 +186,7 @@ class ContaPoupanca(ContaBancaria):
         return 'Conta Poupança'
 
 class ContaSalario(ContaBancaria):
+
     def __init__(self, nome, conta, saldo, empresa, saquases_realizados, limite_saques):
         super().__init__(nome, conta, saldo)
         self.__empresa = empresa
@@ -194,3 +216,23 @@ class ContaSalario(ContaBancaria):
 
     def get_tipo_conta(self):
         return 'Conta Salário'
+    
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, nome, conta, saldo, taxa_rendimento, taxa_administracao):
+        super().__init__(nome, conta, saldo)
+        self.__taxa_rendimento = taxa_rendimento
+        self.__taxa_administracao = taxa_administracao
+
+    def get_tipo_conta(self):
+        return 'Conta Investimento'
+    
+    def render_investimento(self):
+        saldo = self.get_saldo()
+        rendimento = self.__taxa_rendimento * saldo
+        saldo += rendimento
+        desconto = self.__taxa_administracao * saldo
+        saldo -= desconto
+        ContaBancaria.saldo = saldo
+        print(self.__saldo)
+        return True
+    
