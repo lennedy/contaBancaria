@@ -1,4 +1,4 @@
-class Endereço:
+class Endereco:
     def __init__(self, rua, numero, bairro, cidade):
         self.__rua = rua
         self.__numero = int(numero)
@@ -43,13 +43,22 @@ class Cliente:
     def exibir_dados(self):
         return f'Nome: {self.__nome} \nCPF: {self.__cpf} \nEndereço: {self.__endereço}'
 
+    def quantidade_contas(self):
+            quantidade = len(self.__contas)
+            return quantidade
+    
+    def consultar_saldo_total(self):
+        total = 0
+        for conta in self.__contas:
+            total+= conta.__saldo
+        return total
+
 class ContaBancaria:
     numeros_contas = []
     def __init__(self, titular, numero, saldo):
         self.__titular = titular
         self.__numero = numero
         self.__saldo = saldo
-
         ContaBancaria.numeros_contas.append(ContaBancaria)
 
     def get_titular(self):
@@ -82,6 +91,14 @@ class ContaBancaria:
             return True
         else:
             return False       
+        
+    def pix(self, valor, conta_destino):
+        if valor > 0:
+            self.__saldo -= valor
+            conta_destino.depositar(valor)
+            return True
+        else:
+            return False       
     @classmethod
     def contas_duplicadas(cls):
         repetidos = set()
@@ -95,19 +112,28 @@ class ContaBancaria:
     @classmethod
     def verificar_conta_duplicada(cls):
         return len(cls.numeros_contas) != len(set(cls.numeros_contas))
-    
+    def get_tipo_conta(self):
+        return "Conta Bancaria"
 class ContaCorrente(ContaBancaria):
     def __init__(self, cliente, numero, saldo,limite,tarifa_mensal):
         super().__init__(cliente, numero, saldo)
         self.__limite = limite
         self.__tarifa_mensal = tarifa_mensal
-    def sacar(self,valor:float) -> float: 
-        if valor <= (self.__limite + self._ContaBancaria__saldo) and self._ContaBancaria__saldo >= -(self.__limite):
-            self._ContaBancaria__saldo -= valor
+
+    def depositar(self, valor):
+        if valor <= 0:
+            return False
+        self.__saldo += valor                                        
+        return True
+
+    def pix(self, valor, conta_destino):
+        if valor > 0:
+            self.__saldo -= valor
+            conta_destino.depositar(valor)
             return True
         else:
-            return False
-            
+            return False   
+
     def cobrar_taxa(self):
         self.sacar(self.__tarifa_mensal)
     def get_tipo_conta(self):
@@ -136,3 +162,27 @@ class ContaSalario(ContaBancaria):
 
     def get_tipo_conta(self):
         return "Conta Salário"
+    
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, titular, numero, saldo):
+        super().__init__(titular, numero, saldo)
+        self.__taxa_rendimento = float
+        self.__taxa_administracao = float
+
+    def get_tipo_conta(self):
+        return "Conta Investimento"
+    
+    def sacar(self, value):
+        if value <= 0:
+            return False
+        self.__saldo -= value
+        return True
+
+    
+    def render_investimento(self):
+        rendimento = self.__saldo * self.__taxa_rendimento
+        self.__saldo+= rendimento
+        self.__saldo-=self.__taxa_administracao
+    
+    def exibir_dados(self):
+         return f"{super().exibir_dados()}\nTaxa:{self.__taxa_rendimento}\n TAXA ADM: {self.__taxa_administracao}"

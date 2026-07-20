@@ -1,0 +1,7 @@
+Isaac 20/7/2026
+POO
+Lennedy
+___________________________________________________________________
+5)a) o metodo de sacar, é por ele que a pessoa no sistema saca
+b)o relacionamento de cliente e endereco é que basicamente o cliente precisa do endereco para poder criar o objeto, assim acontecendo a dependencia
+c)Porque a classe sendo abstrata ajuda a definir os metodos necessarios que a classe filha herdara mas não fornece o metodo real da classe pai.
