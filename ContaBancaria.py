@@ -146,7 +146,7 @@ class ContaCorrente(ContaBancaria):
 
     def get_tipo_conta(self):
         return "Conta Corrente"
-
+    
 
 class ContaPoupanca(ContaBancaria):
 
@@ -218,3 +218,4 @@ class ContaSalario(ContaBancaria):
 
     def get_tipo_conta(self):
         return "Conta Salário"
+    
