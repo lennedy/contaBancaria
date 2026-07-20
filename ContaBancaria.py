@@ -3,6 +3,10 @@ class Cliente:
         self.__nome = nome
         self.__cpf = cpf
         self.__endereco = endereco
+        self._contas = []
+
+    def get_contas(self):
+        return self._contas
 
     def get_nome(self):
         return self.__nome
@@ -13,7 +17,9 @@ class Cliente:
     def get_endereco(self):
         return self.__endereco
     
-    
+    def adicionar_conta(self, conta):
+        self._contas.append()
+
 class Endereco:
     def __init__(self, rua, bairro):
         self.__rua = rua
@@ -24,8 +30,6 @@ class Endereco:
 
     def get_bairro(self):
         return self.__bairro    
-
-          
 
 class ContaBancaria:
     
@@ -98,8 +102,8 @@ class ContaCorrente(ContaBancaria):
         if valor > 0 and self.get_saldo() + self.__limite >= valor:
             self._ContaBancaria__saldo -= valor
             return True
-        return False    
-    
+        return False   
+ 
     def cobrar_taxa(self):
         return self.sacar(self.__tarifa_mensal)
     
@@ -129,7 +133,20 @@ class ContaPoupanca(ContaBancaria):
             + f"\nTipo: {self.get_tipo_conta()}"
              f"\nTaxa de rendimento: {self.__taxa_rendimento * 100:.0f}%"
             )    
+    
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, numero, titular, saldo, taxa_rendimento = float, taxa_administracao = float):
+        super().__init__(titular, numero, saldo)
+        self.__taxa_rendimento = taxa_rendimento
+        self.__taxa_administracao = taxa_administracao
 
+    def get_tipo_conta(self):
+        return "Conta Investiemnto"
+    
+    def render_investimento(self):
+        investimento = self.get_saldo * self.__taxa_administracao - self.__taxa_rendimento
+        return investimento
+    
 class ContaSalario(ContaBancaria):
     def __init__(self, titular, numero, saldo, empresa, limite_saques=1):
         super().__init__(titular, numero, saldo)
