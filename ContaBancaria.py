@@ -1,3 +1,5 @@
+from collections import Counter
+
 class Cliente:
     def __init__(self, nome: str, cpf: str, endereco: 'Endereco'):
         self.__nome = nome
@@ -36,6 +38,16 @@ class Cliente:
     def adicionar_conta(self, conta: 'ContaBancaria'):
         self.__contas.append(conta)
 
+    def quantidade_contas(self):
+        return len(self.__contas)
+    
+    def consultar_saldo_total(self):
+        saldo_total = 0
+        for conta in self.__contas:
+            saldo_total += conta._saldo
+        return saldo_total
+
+
 class Endereco:
     def __init__(self, rua: str, numero: int, bairro: str, cidade: str):
         self.__rua = rua
@@ -68,7 +80,7 @@ class ContaBancaria:
 
     numero_contas = []
 
-    def __init__(self, titular: Cliente, numero: str, saldo: float):
+    def __init__(self, titular: Cliente, numero: int, saldo: float):
         self.__cliente = titular
         self.__numero = numero
         self._saldo = saldo
@@ -99,17 +111,18 @@ class ContaBancaria:
 
     def exibir_dados(self) -> str:
         return  (
-            f"=======Conta Bancária=======\n"
+            f"Conta Bancária: \n"
             f"Número: {self.__numero}\n"
-            f"Saldo: R$ {self._saldo:.2f}\n"
-            f"Tipo de conta: {self.get_tipo_conta()}"
+            f"Tipo de conta: {self.get_tipo_conta()}\n"
+            f"Saldo: R$ {self._saldo:.2f}"
         )
     
     def depositar(self, valor: float) -> None:
         if valor > 0:
             self._saldo += valor
+            return True
         else:
-            return None
+            return False
     
     def sacar(self, valor: float) -> bool:
         if 0 < valor <= self._saldo:
@@ -137,8 +150,17 @@ class ContaCorrente(ContaBancaria):
         saldo_atual = self._saldo
         if 0 < valor <= saldo_atual + self.__limite:
             self._saldo -= valor
+            return True
         else:
-            return None
+            return False
+        
+
+    def depositar(self, valor: float) -> None:
+        if valor > 0:
+            self._saldo += valor
+            return True
+        else:
+            return False
 
     def cobrar_tarifa(self) -> None:
         if self.__tarifa_mensal <= 0:
@@ -155,6 +177,12 @@ class ContaCorrente(ContaBancaria):
     def get_tipo_conta(self) -> str:
         return "Conta Corrente"
     
+    def pix(self, valor, conta_destino):
+        if super().transferir(valor, conta_destino):
+            return True
+        else:
+            return False
+    
 class ContaPoupanca(ContaBancaria):
     def __init__(self, titular: Cliente, numero: str, saldo: float, taxa_redimento: float):
         super().__init__(titular, numero, saldo)
@@ -168,6 +196,7 @@ class ContaPoupanca(ContaBancaria):
 
     def render_juros(self) -> None:
         if self.__taxa_rendimento > 0:
+            self.__taxa_rendimento = self.__taxa_rendimento / 100
             self._saldo += self.__taxa_rendimento * self._saldo
         else:
             return None
@@ -180,3 +209,17 @@ class ContaPoupanca(ContaBancaria):
     
     def get_tipo_conta(self) -> str:
         return "Conta Poupança"
+    
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, titular: Cliente, numero: int, saldo: float, taxa_rendimento: float, taxa_administracao: float):
+        super().__init__(titular, numero, saldo)
+        self.taxa_rendimento = taxa_rendimento
+        self.taxa_administracao = taxa_administracao
+
+    def get_tipo_conta(self) -> str:
+        return "Conta Investimento"
+    
+    def render_investimento(self):
+        self._saldo += (self.taxa_rendimento / 100) * self._saldo
+        self._saldo -= (self.taxa_administracao / 100) * self._saldo
+        return self._saldo
