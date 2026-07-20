@@ -170,3 +170,79 @@ class ContaInvestimento(ContaBancaria):
     @classmethod
     def existe_conta_duplicada(cls):
         return len(cls.numero_contas) != len(set(cls.numero_contas))
+    
+
+    class ContaCorrente(ContaBancaria):
+    def __init__(self, cliente, numero, saldo, limite,tarifa_mensal):
+        super().__init__( cliente, numero, saldo)
+        self.__limite = limite
+        self.__tarifa_mensal = tarifa_mensal
+    def sacar(self, valor):
+        if valor <= self.get_saldo() + self.__limite:
+            self.set_saldo(self.get_saldo() - valor)
+            return True
+        else:
+            return False
+    def cobrar_taxa(self):
+        super().sacar(self.__tarifa_mensal)
+  
+
+    def exibir_dados(self):
+        return  (
+            super().exibir_dados() +
+            f"\ntipo: {self.get_tipo_conta()}"
+            f"\nlimite: {self.__limite}" +
+            f"\ntarifa: {self.__tarifa_mensal}"
+        )
+    def get_tipo_conta(self):
+        return "Conta Corrente"
+
+class ContaPoupanca(ContaBancaria):
+    def __init__(self, cliente, numero, saldo, taxa_rendimento: float):
+        super().__init__( cliente, numero, saldo)
+        self.__taxa_rendimento = taxa_rendimento
+
+    def sacar(self, valor):
+        return super().sacar(valor)
+
+
+    def render_juros(self):
+        juros = self.get_saldo() * self.__taxa_rendimento
+        self.depositar(juros)
+
+      
+    def exibir_dados(self):
+        return(
+        super().exibir_dados() +
+        f"\ntipo:{self.get_tipo_conta()}" +
+        f"\ntaxa de rendimento:{self.__taxa_rendimento}"
+        )
+    def get_tipo_conta(self):
+        return "Conta Poupança"
+class ContaSalario(ContaBancaria):
+    def __init__(self, cliente, numero, saldo, empresa, limite_de_saques):
+        super().__init__(cliente, numero, saldo)
+        self.__empresa = empresa
+        self.__limite_de_saques = limite_de_saques
+        self.__saques_realizados = 0
+    def get_tipo_conta(self):
+        return "Conta Salario"
+    def depositar(self, valor):
+        return False
+    def sacar(self, valor):
+        if self.__saques_realizados < self.__limite_de_saques:
+            if super().sacar(valor):
+                self.__saques_realizados += 1
+            return True
+        return False
+    
+    def exibir_dados(self):
+        return (
+        super().exibir_dados() +
+        f"\nTipo: {self.get_tipo_conta()}" +
+        f"\nEmpresa: {self.__empresa}" +
+        f"\nSaques realizados: {self.__saques_realizados}/{self.__limite_de_saques}"
+    )
+    def receber_salario(self, valor):
+        self.set_saldo(self.get_saldo() + valor)
+        return True
