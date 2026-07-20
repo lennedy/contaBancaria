@@ -3,6 +3,7 @@ class Cliente:
         self.__nome = nome
         self.__cpf = cpf
         self.__endereco = endereco
+        self.__contas = []
 
     def get_nome(self):
         return self.__nome
@@ -12,6 +13,17 @@ class Cliente:
     
     def get_endereco(self):
         return self.__endereco
+    
+    def adicionar_conta(self, conta):
+        self.__contas.append(conta)
+        
+
+    def quantidade_contas(self):
+        return len(self.__contas)
+    
+    def consultar_saldo_total(self):
+        return sum(conta.get_saldo() for conta in self.__contas)
+
         
 class Endereco:
     def __init__(self, rua, bairro):
@@ -32,7 +44,8 @@ class ContaBancaria:
         self.__numero = numero
         self.__saldo = saldo
 
-        ContaBancaria.numeros_conta.append(numero)
+        ContaBancaria.numeros_conta.append(self.__numero)
+        titular.adicionar_conta(self)
 
     def get_titular(self):
         return self.__titular.get_nome()
@@ -73,6 +86,23 @@ class ContaBancaria:
             f"Numero da Conta: {self.__numero}\n"
             f"Saldo: R$ {self.__saldo:.2f}"
         )
+    
+
+    @classmethod
+    def existe_conta_duplicadas(cls):
+        return len(cls.numeros_conta) != len(set(cls.numeros_conta))
+    
+    @classmethod
+    def conta_duplicadas(cls):
+        vistas = []
+        duplicadas = []
+        for numero in cls.numeros_conta:
+            if numero in vistas and numero not in duplicadas:
+                duplicadas.append(numero)
+            else:
+                vistas.append(numero)
+        return duplicadas
+    
 
 class ContaCorrente(ContaBancaria):
     def __init__(self, cliente, numero, saldo, limite = 500, tarifa_mensal = 100):
@@ -97,6 +127,17 @@ class ContaCorrente(ContaBancaria):
     
     def cobrar_taxa(self):
         return self.sacar(self.__tarifa_mensal)
+    
+    def pix(self, valor, conta_destino):
+        if valor <= 0 or self.get_saldo() < valor:
+            return False
+        if self.sacar(valor):
+            if conta_destino.depositar(valor):
+                return True
+            self.depositar(valor)
+        return False
+
+            
     
     def exibir_dados(self):
         return( 
@@ -124,6 +165,8 @@ class ContaPoupanca(ContaBancaria):
             + f"\nTipo: {self.get_tipo_conta()}"
              f"\nTaxa de rendimento: {self.__taxa_rendimento * 100:.0f}%"
             )    
+    
+
 
 class ContaSalario(ContaBancaria):
     def __init__(self, titular, numero, saldo, empresa, limite_saques=1):
@@ -164,17 +207,18 @@ class ContaSalario(ContaBancaria):
         )
         
     
-    @classmethod
-    def existe_conta_duplicadas(cls):
-        return len(cls.numeros_conta) != len(set(cls.numeros_conta))
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, titular, numero , saldo, taxa_rendimento = 0.05, taxa_administracao = 0.01):
+        super().__init__(titular, numero, saldo)
+        self.__taxa_rendimento = taxa_rendimento
+        self.__taxa_administracao = taxa_administracao
+
+    def get_tipo_conta(self):
+        return "Conta Investimento"
     
-    @classmethod
-    def conta_duplicadas(cls):
-        vistas = []
-        duplicadas = []
-        for numero in cls.numeros_conta:
-            if numero in vistas and numero not in duplicadas:
-                duplicadas.append(numero)
-            else:
-                vistas.append(numero)
-        return duplicadas
+    def render_investimento(self):
+        rendimento = self.get_saldo() * self.__taxa_rendimento
+        taxa_administracao = rendimento * self.__taxa_administracao
+        rendimento_total = rendimento - taxa_administracao
+
+        self.depositar(rendimento_total)

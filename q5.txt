@@ -1,0 +1,11 @@
+Aluno: João Victor
+
+Respostas da prova:
+
+Q5:
+A) O método que deverá ser sobrescrito para alterar a forma de saque da Conta Salário, deverá ser o método sacar()
+
+B) A relação entre Cliente e Endereço é de uma agregação, pois o cliente possui um endereço que é criado separadamente.
+
+C) A classe ContaBancaria foi definida como classe abstrata por já possuir métodos bases que deverão ser utilizados em todas as classes como atributos bases, 
+e a vantagem disso e que você não precisa ficar escrevendo esses métodos do zero toda vez que for criar um tipo de conta no código.
