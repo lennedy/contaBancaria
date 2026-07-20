@@ -1,0 +1,3 @@
+a = o método sacar porque ele possui regras diferentes da conta bancaria
+b= relacionamento de composição, o endereço é criado dentro do cliente e o cliente tem um endereço
+c= porque ela é a classe "principal", todas as outras classes herdam dessa classe conta bancaria. funciona como uma base para as outras e diminui bastante a quantidade de códigos que seriam usados sem herdar dela

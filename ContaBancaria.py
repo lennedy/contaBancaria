@@ -38,6 +38,19 @@ class Cliente:
     def adicionar_conta(self, conta: 'ContaBancaria'):
         self.__contas.append(conta)
 
+    def quantidade_contas(self):
+        if len (self.__contas) >= 1:
+            return len (self.__contas)
+        else:
+            return "O cliente não tem conta"
+        
+    def consultar_saldo_total(self):
+        saldo_total = 0 
+        for conta in self.__contas:
+            saldo_total += conta.get_saldo()
+        return saldo_total
+
+
 class Endereco:
     def __init__(self, rua: str, numero: int, bairro: str, cidade: str):
         self.__rua = rua
@@ -110,8 +123,9 @@ class ContaBancaria:
     def depositar(self, valor: float) -> None:
         if valor > 0:
             self._saldo += valor
+            return True
         else:
-            return None
+            return False
     
     def sacar(self, valor: float) -> bool:
         if 0 < valor <= self._saldo:
@@ -139,8 +153,9 @@ class ContaCorrente(ContaBancaria):
         saldo_atual = self._saldo
         if 0 < valor <= saldo_atual + self.__limite:
             self._saldo -= valor
+            return True
         else:
-            return None
+            return False
 
     def cobrar_tarifa(self) -> None:
         if self.__tarifa_mensal <= 0:
@@ -156,6 +171,9 @@ class ContaCorrente(ContaBancaria):
 
     def get_tipo_conta(self) -> str:
         return "Conta Corrente"
+    
+    def pix (self, valor,conta_destino):
+        return self.transferir(valor, conta_destino)
     
 class ContaPoupanca(ContaBancaria):
     def __init__(self, titular: Cliente, numero: str, saldo: float, taxa_redimento: float):
@@ -182,3 +200,21 @@ class ContaPoupanca(ContaBancaria):
     
     def get_tipo_conta(self) -> str:
         return "Conta Poupança"
+
+class ContaInvestimento(ContaBancaria):
+    def __init__(self, titular: Cliente, numero: int, saldo: float, taxa_rendimento: float, taxa_administracao: float):
+        super().__init__(titular, numero, saldo)
+        self.taxa_rendimento = taxa_rendimento
+        self.taxa_administracao = taxa_administracao
+    
+    def get_tipo_conta(self) -> str:
+        return "Conta Investimento"
+    
+    def render_investimento(self):
+        self._saldo += (self.taxa_rendimento * 0.01) * self._saldo
+        self._saldo -= (self.taxa_administracao * 0.01) * self._saldo 
+        return self._saldo
+    
+
+    
+        
