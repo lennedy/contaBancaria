@@ -1,0 +1,3 @@
+a) = porque a conta salario tem regras diferentes de  saque, sendo preciso sobrescrever esse metodo
+b) = soociação, porque um cliente possui um endereço
+c) = porque representa um modelo generico de conta, e ela impede a criação de contas genericas 

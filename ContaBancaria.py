@@ -23,12 +23,16 @@ class Endereco:
         return f"Rua: {self.get_rua()}, Nº {self.get_numero()} | Bairro: {self.get_bairro()} | Cidade: {self.get_cidade()}"
     
 
-class Cliente:
-    def __init__(self, nome: str, cpf: str, endereco:str):
+class Cliente():
+    def __init__(self,  nome: str, cpf: str, endereco:str, ):
         self.__nome = nome
         self.__cpf = cpf
         self.__endereco = endereco
+        self.__contas = []
 
+    def get_tipo_conta(self) -> str:
+        return "Conta Cliente"
+        
     def get_nome(self) -> str:
         return self.__nome
     
@@ -38,10 +42,22 @@ class Cliente:
     def get_endereco(self) -> Endereco:
         return self.__endereco
     
+    def quantidade_conta(self):
+        return len(self.__contas)
+    
+    def adicionar_contas(self, conta):
+        self.__contas.append(conta)
+
+    
     def exibir_dados(self) -> str:
         return f"Nome: {self.get_nome()} | CPF: {self.get_cpf()} | Endereço: {self.get_endereco().exibir_dados()}"
     
-
+    def consultar_saldo_total(self):
+       return sum(conta.get_saldo() for conta in self.__contas)
+    
+    def quantidade_contas(self):
+        return len(self.__contas)
+    
 class ContaBancaria:
 
     numero_contas = []
@@ -109,7 +125,7 @@ class ContaBancaria:
         return f"{self.__Cliente.exibir_dados()} | numero: {self.__numero} | saldo: R$ {self._saldo}"
     
 class ContaCorrente(ContaBancaria):
-    def __init__(self, titular: Cliente, numero: str, saldo: float, limite:float, tarifa_mensal: float):
+    def __init__(self, titular: Cliente, numero: str, saldo: float, limite:float, tarifa_mensal: float, ):
         super().__init__(titular, numero, saldo)
         self.__limite = limite
         self.__tarifa_mensal = tarifa_mensal
@@ -128,9 +144,10 @@ class ContaCorrente(ContaBancaria):
     def cobrar_taxa(self,) -> None:
         if self.__tarifa_mensal >= 0:
             self.sacar(self.__tarifa_mensal)
-         
 
-
+    def pix(self, valor, conta_destino):
+        return self.transferir(valor, conta_destino)
+    
 class ContaPoupanca(ContaBancaria):
     def __init__(self, titular, numero, saldo, taxa_rendimento):
         super().__init__(titular, numero, saldo)
@@ -144,13 +161,14 @@ class ContaPoupanca(ContaBancaria):
         self._saldo += self._saldo * self.__taxa_rendimento
         # print(self._saldo)
 
+
 class ContaSalario(ContaBancaria):
     def __init__(self, titular, numero, saldo, empresa, saques_realizados, limite_saques):
         super().__init__(titular, numero, saldo)
         self.__empresa = empresa
         self.__saques_realizados = saques_realizados
         self.__limite_saques = limite_saques
-
+    
     def get_tipo_conta(self) -> str:
         return "Conta Salário"
 
