@@ -1,0 +1,7 @@
+a = o metodo é o sacar() pois cada tipo de conta possui regras diferente do saque
+
+
+b = é de composiçao porque o endereço pertence ao cliente
+
+
+c = para servi de  modelo para as outras contas, evitando repetiçao de codigo e facilitando a reutilizacao e manutencao do sitema

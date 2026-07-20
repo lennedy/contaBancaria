@@ -22,7 +22,7 @@ class Endereco:
     
     def exibir_dados(self):
         return f'Rua: {self.__rua}\nNumero: {self.__numero}\nBairro: {self.__bairro}\nCidade: {self.__cidade}'
-
+   
 class Cliente:
     def __init__(self,nome,cpf,endereco):
         self.__nome=nome
@@ -47,7 +47,26 @@ class Cliente:
         f"CPF: {self.__cpf}\n"
         f"{self.__endereco.exibir_dados()}"
     )
+    def quantidade_contas(contabancaria):
+     numero_conta=[]
+     contas_duplicadas=[]
+    self._contas = contas
+    self._cliente
+    ContaBancaria.quantidade_cantas()
+
+    def consultar_saldo_total():
+        self._saldo=saldo
+        self._total=total
+    class ContaCorrente(ContaBancaria):
+        def__init__(self, cliente, numero, saldo
+                    limite=500,
+                    tarifa_mensal=20.0)
+        
     
+
+     
+
+
     def adicionar_conta(self,conta):
         self.__contas.append(conta)
     
@@ -135,5 +154,5 @@ class ContaBancaria:
     def existe_conta_duplicada(cls):
         return len(cls.numero_contas) != len(set(cls.numero_contas))
     
-
+    
     
