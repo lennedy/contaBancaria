@@ -7,7 +7,7 @@ from collections import Counter
 
 class Endereco:
 
-    def _init_(self, rua, numero, bairro, cidade):
+    def __init__(self, rua, numero, bairro, cidade):
         self.__rua = rua
         self.__numero = numero
         self.__bairro = bairro
@@ -31,7 +31,7 @@ class Endereco:
 
 class Cliente:
 
-    def _init_(self, nome, cpf, endereco):
+    def __init__(self, nome, cpf, endereco):
         self.__nome = nome
         self.__cpf = cpf
         self.__endereco = endereco
@@ -55,13 +55,13 @@ class Cliente:
             f"CPF: {self.__cpf}\n"
             f"Endereço: {self.__endereco.exibir_dados()}"
         )
-
+    
 
 class ContaBancaria:
 
     numero_contas = []
 
-    def _init_(self, cliente, numero, saldo):
+    def __init__(self, cliente, numero, saldo):
         self.__cliente = cliente
         self.__numero = numero
         self.__saldo = saldo
@@ -127,3 +127,47 @@ class ContaBancaria:
             obj.depositar(valor)
             return True
         return False
+    
+    def quantidade_contas(self, conta):
+        for conta in self.__contas:
+          self.__contas.append(conta)
+        return self.contas
+    
+    def consultar_saldo_total(self, saldo, contas):
+        self.saldo = saldo
+        self.contas = contas
+        return len(saldo)
+        
+
+    
+
+class ContaCorrente(ContaBancaria):
+    def __init__(self, cliente, conta, saldo, limite, tarifa_mensal):
+      super().__init__(cliente, conta, saldo)
+      self.__limite = limite
+      self.__tarifa_mensal = tarifa_mensal
+    
+    def pix(self, valor, conta_destino, conta):
+        self.conta_destino = conta_destino
+        self.conta = conta
+        if valor > 0 and self.saldo >= valor:
+              self.__valor -= conta
+              self.__valor += conta_destino
+              return True
+        return False
+    
+
+class ContaPoupanca(ContaBancaria):
+    def __init__(self, cliente, conta, saldo, taxa_rendimento):
+      super().__init__(cliente, conta, saldo)
+      self.__taxa_rendimento = taxa_rendimento
+    
+class ContaSalario(ContaBancaria):
+    def __init__(self, cliente, conta, saldo, saques_realizados, empresas, limite_saques):
+      super().__init__()
+      self.__saques_realizados = saques_realizados
+      self.__empresas = empresas
+      self.__limite_saques = limite_saques
+      self.contador = 0
+
+      
